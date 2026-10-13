@@ -14,10 +14,10 @@ title:"HiMummy: A Maternal Wellbeing Wearable and Smart Baby Monitoring System"
 ---
 
 ## Team
--  E/22/402, H.P.P.E Umanda, [email](e22402@eng.pdn.ac.lk)
--  E/22/425, D.S Wellage, [email](e22425@eng.pdn.ac.lk)
--  E/22/157, R.V Jayalath, [email](e22157@eng.pdn.ac.lk)
--  E/22/018, A.C.F Akeela, [email](e22018@eng.pdn.ac.lk)
+- E/22/402, H.P.P.E Umanda, [e22402@eng.pdn.ac.lk](mailto:e22402@eng.pdn.ac.lk)
+- E/22/425, D.S Wellage, [e22425@eng.pdn.ac.lk](mailto:e22425@eng.pdn.ac.lk)
+- E/22/157, R.V Jayalath, [e22157@eng.pdn.ac.lk](mailto:e22157@eng.pdn.ac.lk)
+- E/22/018, A.C.F Akeela, [e22018@eng.pdn.ac.lk](mailto:e22018@eng.pdn.ac.lk)
 
 <!-- Image (photo/drawing of the final hardware) should be here -->
 
