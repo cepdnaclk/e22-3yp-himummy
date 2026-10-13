@@ -3,20 +3,21 @@ layout: home
 permalink: index.html
 
 # Please update this with your repository name and project title
-repository-name: eYY-3yp-project-template
-title: Project Template
+repository-name: e22-3yp-himummy
+title:"HiMummy: A Maternal Wellbeing Wearable and Smart Baby Monitoring System"
 ---
 
 [comment]: # "This is the standard layout for the project, but you can clean this and use your own template"
 
-# Project Title
+# HiMummy — A Maternal Wellbeing Wearable and Smart Baby Monitoring System
 
 ---
 
 ## Team
--  eNumber, Name, [email](mailto:name@email.com)
--  eNumber, Name, [email](mailto:name@email.com)
--  eNumber, Name, [email](mailto:name@email.com)
+-  E/22/402, H.P.P.E Umanda, [email](e22402@eng.pdn.ac.lk)
+-  E/22/425, D.S Wellage, [email](e22425@eng.pdn.ac.lk)
+-  E/22/157, R.V Jayalath, [email](e22157@eng.pdn.ac.lk)
+-  E/22/018, A.C.F Akeela, [email](e22018@eng.pdn.ac.lk)
 
 <!-- Image (photo/drawing of the final hardware) should be here -->
 
@@ -35,20 +36,20 @@ title: Project Template
 
 ## Introduction
 
-Description of the real world problem and solution, impact
+HiMummy aims to support maternal wellbeing and baby monitoring through a connected technology platform. The proposed system will explore ways to monitor selected maternal wellbeing indicators, observe the baby's environment, and present relevant information through a mobile application. The final features and implementation details will be determined during the project design phase.
 
 
 ## Solution Architecture
 
-High level diagram + description
+The overall system architecture, including the hardware components, mobile application, data storage, and healthcare-worker interface, will be finalised during the design phase.
 
 ## Hardware and Software Designs
 
-Detailed designs with many sub-sections
+The hardware components, sensors, communication methods, and software technologies are currently under consideration. The final design will be documented after evaluating the available options and confirming the project requirements.
 
 ## Testing
 
-Testing done on hardware and software, detailed + summarized results
+Testing methods and evaluation criteria will be defined after the system requirements and design are finalised. Testing will focus on evaluating the functionality, reliability, usability, and performance of the implemented components.
 
 ## Detailed budget
 
@@ -56,11 +57,11 @@ All items and costs
 
 | Item          | Quantity  | Unit Cost  | Total  |
 | ------------- |:---------:|:----------:|-------:|
-| Sample item   | 5         | 10 LKR     | 50 LKR |
+| Sample item   |           |            |        |
 
 ## Conclusion
 
-What was achieved, future developments, commercialization plans
+HiMummy aims to develop an integrated solution for maternal wellbeing and baby monitoring. The project will progress through requirements analysis, system design, implementation, and evaluation. The final outcomes and possible future improvements will be documented as the project develops.
 
 ## Links
 
