@@ -1,57 +1,29 @@
-___
-# DELETE THIS INSTRUCTIONS AND ADD AN INTRODUCTION ABOUT YOUR PROJECT
-___
+# HiMummy: A Maternal Wellbeing Wearable and Smart Baby Monitoring System
 
-# eYY-3yp-project-template
+## Introduction
 
-This is a sample repository you can use for your Embedded Systems project. Once you followed these instructions, remove the text and add a brief introduction to here.
+HiMummy is a third-year undergraduate engineering project that aims to explore an integrated technology solution for maternal wellbeing and baby monitoring. The proposed system will investigate the use of wearable technology, monitoring components, and software applications to help provide relevant information about the mother and baby.
 
-### Enable GitHub Pages
+The project will progress through requirements analysis, system design, implementation, and evaluation. The final features and technologies will be determined during the design and development stages.
 
-You can put the things to be shown in GitHub pages into the _docs/_ folder. Both html and md file formats are supported. You need to go to settings and enable GitHub pages and select _main_ branch and _docs_ folder from the dropdowns, as shown in the below image.
+## Team Members
 
-![image](https://user-images.githubusercontent.com/11540782/98789936-028d3600-2429-11eb-84be-aaba665fdc75.png)
+| Registration Number | Name | Email |
+|---|---|---|
+| E/22/402 | H.P.P.E Umanda | [e22402@eng.pdn.ac.lk](mailto:e22402@eng.pdn.ac.lk) |
+| E/22/425 | D.S Wellage | [e22425@eng.pdn.ac.lk](mailto:e22425@eng.pdn.ac.lk) |
+| E/22/157 | R.V Jayalath | [e22157@eng.pdn.ac.lk](mailto:e22157@eng.pdn.ac.lk) |
+| E/22/018 | A.C.F Akeela | [e22018@eng.pdn.ac.lk](mailto:e22018@eng.pdn.ac.lk) |
 
-### Special Configurations
+## Project Website
 
-These projects will be automatically added into [https://projects.ce.pdn.ac.lk](). If you like to show more details about your project on this site, you can fill the parameters in the file, _/docs/index.json_
+Visit the [HiMummy Project Website](https://cepdnaclk.github.io/e22-3yp-himummy/) for the project overview, design details, and progress updates.
 
-```
-{
-  "title": "This is the title of the project",
-  "team": [
-    {
-      "name": "Team Member Name 1",
-      "email": "email@eng.pdn.ac.lk",
-      "eNumber": "E/yy/xxx"
-    },
-    {
-      "name": "Team Member Name 2",
-      "email": "email@eng.pdn.ac.lk",
-      "eNumber": "E/yy/xxx"
-    },
-    {
-      "name": "Team Member Name 3",
-      "email": "email@eng.pdn.ac.lk",
-      "eNumber": "E/yy/xxx"
-    }
-  ],
-  "supervisors": [
-    {
-      "name": "Dr. Supervisor 1",
-      "email": "email@eng.pdn.ac.lk"
-    },
-    {
-      "name": "Supervisor 2",
-      "email": "email@eng.pdn.ac.lk"
-    }
-  ],
-  "tags": ["Web", "Embedded Systems"]
-}
-```
+## Repository Structure
 
-Once you filled this _index.json_ file, please verify the syntax is correct. (You can use [this](https://jsonlint.com/) tool).
+- `docs/` — Project website and documentation.
+- `code/` — Project source code and implementation files, as development progresses.
 
-### Page Theme
+## Project Status
 
-A custom theme integrated with this GitHub Page, which is based on [github.com/cepdnaclk/eYY-project-theme](https://github.com/cepdnaclk/eYY-project-theme). If you like to remove this default theme, you can remove the file, _docs/\_config.yml_ and use HTML based website.
+The project is in the planning and design stage. System requirements, hardware components, software technologies, and evaluation methods will be confirmed as development progresses.
