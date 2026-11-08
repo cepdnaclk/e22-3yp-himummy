@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../../widgets/app_bottom_nav.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
 import '../maternal/maternal_health_screen.dart';
 import '../check_in/daily_check_in_screen.dart';
 
-class HomeDashboardScreen extends StatefulWidget {
+class HomeDashboardScreen extends StatelessWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeDashboardScreen> createState() => _HomeDashboardScreenState();
-}
-
-class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
-  // Index for Bottom Navigation Bar
-  int _currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +40,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                       ),
                     ],
                   ),
-                  
-                  
                 ],
               ),
               
@@ -116,11 +107,10 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'Stay close, wherever you are.',
                 icon: Icons.videocam_outlined,
                 onTap: () {
-                  // Navigate to Baby Monitor screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BabyMonitorScreen(),
+                      builder: (context) => const BabyMonitorScreen(),
                     ),
                   );
                 },
@@ -133,11 +123,10 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'A little insight into your wellbeing.',
                 icon: Icons.favorite_border,
                 onTap: () {
-                  // Navigate to Maternal Health screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MaternalHealthScreen(), // Placeholder for Maternal Health screen
+                      builder: (context) => const MaternalHealthScreen(),
                     ),
                   );
                 },
@@ -150,11 +139,10 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'How are you feeling today?',
                 icon: Icons.assignment_outlined,
                 onTap: () {
-                  // Navigate to Daily Check-in screen
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const DailyCheckInScreen(), // Placeholder for Daily Check-in screen
+                      builder: (context) => const DailyCheckInScreen(),
                     ),
                   );
                 },
@@ -177,49 +165,8 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
         ),
       ),
       
-      // Bottom Navigation Bar matching Figma design
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-          // Handle navigation between bottom tabs
-        },
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.cardWhite,
-        selectedItemColor: AppColors.primaryPurple,
-        unselectedItemColor: AppColors.textMuted,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            activeIcon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.videocam_outlined),
-            activeIcon: Icon(Icons.videocam),
-            label: 'Baby',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border),
-            activeIcon: Icon(Icons.favorite),
-            label: 'Health',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.assignment_outlined),
-            activeIcon: Icon(Icons.assignment),
-            label: 'Check-in',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+      // Bottom Navigation Bar using the reusable AppBottomNav widget for Home (Index 0)
+      bottomNavigationBar: const AppBottomNav(currentIndex: 0),
     );
   }
 
