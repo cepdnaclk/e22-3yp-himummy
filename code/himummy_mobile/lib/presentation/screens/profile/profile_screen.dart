@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
 import 'connect_device_screen.dart';
+import 'settings_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -126,6 +127,13 @@ class ProfileScreen extends StatelessWidget {
                 icon: Icons.settings_outlined,
                 onTap: () {
                   // Handle navigation or action
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsScreen(),
+                    ),
+                  );
+                  
                 },
               ),
               const SizedBox(height: 12),

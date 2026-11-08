@@ -223,7 +223,7 @@ class _ConnectDeviceScreenState extends State<ConnectDeviceScreen> {
               
               const SizedBox(height: 24),
 
-              // Primary Pair Nursery Camera Button
+              // Pair Nursery Camera Button (Primary Style)
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -251,7 +251,7 @@ class _ConnectDeviceScreenState extends State<ConnectDeviceScreen> {
               
               const SizedBox(height: 12),
 
-              // Secondary Pair Wearable Button
+              // Pair Wearable Button (Updated to match primary button color)
               SizedBox(
                 width: double.infinity,
                 height: 52,
@@ -260,7 +260,7 @@ class _ConnectDeviceScreenState extends State<ConnectDeviceScreen> {
                     // Handle wearable pairing action
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.lightPurpleBg,
+                    backgroundColor: AppColors.primaryPurple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
@@ -271,7 +271,7 @@ class _ConnectDeviceScreenState extends State<ConnectDeviceScreen> {
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: AppColors.primaryPurple,
+                      color: Colors.white,
                     ),
                   ),
                 ),
