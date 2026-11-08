@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
+import '../maternal/maternal_health_screen.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
@@ -131,7 +132,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'A little insight into your wellbeing.',
                 icon: Icons.favorite_border,
                 onTap: () {
-                  // Navigate to Maternal Health screen (Milestone 4)
+                  // Navigate to Maternal Health screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const MaternalHealthScreen(), // Placeholder for Maternal Health screen
+                    ),
+                  );
                 },
               ),
               
