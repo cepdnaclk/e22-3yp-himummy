@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
 import '../maternal/maternal_health_screen.dart';
+import '../check_in/daily_check_in_screen.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
@@ -149,7 +150,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'How are you feeling today?',
                 icon: Icons.assignment_outlined,
                 onTap: () {
-                  // Navigate to Daily Check-in screen (Milestone 4)
+                  // Navigate to Daily Check-in screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DailyCheckInScreen(), // Placeholder for Daily Check-in screen
+                    ),
+                  );
                 },
               ),
               
