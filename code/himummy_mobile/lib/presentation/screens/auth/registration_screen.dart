@@ -189,36 +189,44 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 
                 const SizedBox(height: 16),
                 
-                // Terms and conditions agreement checkbox row
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: Checkbox(
-                        value: _agreedToTerms,
-                        activeColor: AppColors.primaryPurple,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                        onChanged: (value) {
-                          setState(() {
-                            _agreedToTerms = value ?? false;
-                          });
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    const Expanded(
-                      child: Text(
-                        'I agree to the Terms of Use and Privacy Policy.',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textDark,
+                // Terms and conditions agreement box matching Figma design
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.lightPurpleBg,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: AppColors.borderGrey),
+                  ),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: Checkbox(
+                          value: _agreedToTerms,
+                          activeColor: AppColors.primaryPurple,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _agreedToTerms = value ?? false;
+                            });
+                          },
                         ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'I agree to the Terms of Use and Privacy Policy.',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textDark,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 
                 const SizedBox(height: 30),
