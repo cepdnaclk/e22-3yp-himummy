@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../dashboard/home_dashboard_screen.dart';
+import '../maternal/maternal_health_screen.dart'; // We will create this next
+import '../check_in/daily_check_in_screen.dart'; // We will create this next
 
-class BabyMonitorScreen extends StatelessWidget {
+class BabyMonitorScreen extends StatefulWidget {
   const BabyMonitorScreen({Key? key}) : super(key: key);
+
+  @override
+  State<BabyMonitorScreen> createState() => _BabyMonitorScreenState();
+}
+
+class _BabyMonitorScreenState extends State<BabyMonitorScreen> {
+  // Set index to 1 because 'Baby' is the active tab here
+  int _currentIndex = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -190,9 +201,7 @@ class BabyMonitorScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle listen action
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryPurple,
                     shape: RoundedRectangleBorder(
@@ -218,9 +227,7 @@ class BabyMonitorScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Handle play lullaby action
-                  },
+                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPurpleBg,
                     shape: RoundedRectangleBorder(
@@ -256,6 +263,56 @@ class BabyMonitorScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      
+      // Bottom Navigation Bar added matching the design
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+          // Handle tab switching
+          if (index == 0) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeDashboardScreen()),
+            );
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: AppColors.cardWhite,
+        selectedItemColor: AppColors.primaryPurple,
+        unselectedItemColor: AppColors.textMuted,
+        selectedFontSize: 12,
+        unselectedFontSize: 12,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            activeIcon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.videocam_outlined),
+            activeIcon: Icon(Icons.videocam),
+            label: 'Baby',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite_border),
+            activeIcon: Icon(Icons.favorite),
+            label: 'Health',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.assignment_outlined),
+            activeIcon: Icon(Icons.assignment),
+            label: 'Check-in',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person_outline),
+            activeIcon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
