@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/constants/app_colors.dart';
+import '../baby_monitor/baby_monitor_screen.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({Key? key}) : super(key: key);
@@ -43,8 +44,9 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                         ),
                       ),
                     ],
-                  
                   ),
+                  
+                  
                 ],
               ),
               
@@ -112,7 +114,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 subtitle: 'Stay close, wherever you are.',
                 icon: Icons.videocam_outlined,
                 onTap: () {
-                  // Navigate to Baby Monitor screen (Milestone 4)
+                  // Navigate to Baby Monitor screen
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BabyMonitorScreen(),
+                    ),
+                  );
                 },
               ),
               
