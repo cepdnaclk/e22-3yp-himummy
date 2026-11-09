@@ -5,6 +5,7 @@ import 'connect_device_screen.dart';
 import 'settings_screen.dart';
 import 'personal_info_screen.dart';
 import 'help_support_screen.dart';
+import '../auth/login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -169,7 +170,12 @@ class ProfileScreen extends StatelessWidget {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle log out action
+                    // Navigate to Login screen and clear the navigation stack
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      (route) => false, // Remove all previous routes
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPurpleBg,
