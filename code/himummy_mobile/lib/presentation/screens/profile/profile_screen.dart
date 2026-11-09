@@ -4,6 +4,7 @@ import '../../widgets/app_bottom_nav.dart';
 import 'connect_device_screen.dart';
 import 'settings_screen.dart';
 import 'personal_info_screen.dart';
+import 'help_support_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -151,6 +152,12 @@ class ProfileScreen extends StatelessWidget {
                 icon: Icons.help_outline,
                 onTap: () {
                   // Handle navigation or action
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HelpSupportScreen(),
+                    ),
+                  );
                 },
               ),
 
