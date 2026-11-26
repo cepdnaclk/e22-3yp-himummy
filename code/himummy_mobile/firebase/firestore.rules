@@ -1,0 +1,197 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function userData(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+
+    function isMother(uid) {
+      return signedIn() && userData(uid).role == 'mother';
+    }
+
+    function isClinician(uid) {
+      return signedIn() && userData(uid).role == 'clinician';
+    }
+
+    function isAssignedClinician(motherUid) {
+      return signedIn()
+        && userData(motherUid).role == 'mother'
+        && userData(motherUid).assigned_clinician_uid == request.auth.uid
+        && isClinician(request.auth.uid);
+    }
+
+    function validSource(data) {
+      return data.source is string && data.source.size() > 0;
+    }
+
+    function validHeartRate(data) {
+      return data.keys().hasAll([
+          'heart_rate_bpm', 'recorded_at', 'signal_quality', 'source'
+        ])
+        && data.keys().hasOnly([
+          'heart_rate_bpm', 'recorded_at', 'signal_quality', 'source'
+        ])
+        && data.heart_rate_bpm is int
+        && data.heart_rate_bpm >= 30
+        && data.heart_rate_bpm <= 220
+        && data.recorded_at is timestamp
+        && data.recorded_at <= request.time
+        && data.signal_quality is string
+        && data.signal_quality in ['good', 'fair', 'poor', 'invalid']
+        && validSource(data);
+    }
+
+    function validRoomReading(data) {
+      return data.keys().hasAll([
+          'room_temp_c', 'humidity_percent', 'updated_at', 'source'
+        ])
+        && data.keys().hasOnly([
+          'room_temp_c', 'humidity_percent', 'updated_at', 'source'
+        ])
+        && (data.room_temp_c is int || data.room_temp_c is float)
+        && data.room_temp_c >= -10
+        && data.room_temp_c <= 60
+        && (data.humidity_percent is int || data.humidity_percent is float)
+        && data.humidity_percent >= 0
+        && data.humidity_percent <= 100
+        && data.updated_at is timestamp
+        && data.updated_at <= request.time
+        && validSource(data);
+    }
+
+    function validCheckin(data) {
+      return data.keys().hasAll(['answers', 'submitted_at', 'consent_given'])
+        && data.keys().hasOnly(['answers', 'submitted_at', 'consent_given'])
+        && data.answers is map
+        && data.answers.size() > 0
+        && data.submitted_at is timestamp
+        && data.submitted_at <= request.time
+        && data.consent_given is bool
+        && data.consent_given == true;
+    }
+
+    function validClinicianNote(data) {
+      return data.keys().hasAll([
+          'note_text', 'author_uid', 'author_name', 'created_at', 'review_status'
+        ])
+        && data.keys().hasOnly([
+          'note_text', 'author_uid', 'author_name', 'created_at', 'review_status'
+        ])
+        && data.note_text is string
+        && data.note_text.size() > 0
+        && data.note_text.size() <= 2000
+        && data.author_uid == request.auth.uid
+        && data.author_name == userData(request.auth.uid).display_name
+        && data.created_at is timestamp
+        && data.created_at <= request.time
+        && data.review_status == 'pending';
+    }
+
+    function validAuditLog(data) {
+      return data.keys().hasAll([
+          'actor_uid', 'actor_role', 'action', 'target_path', 'timestamp'
+        ])
+        && data.keys().hasOnly([
+          'actor_uid', 'actor_role', 'action', 'target_path', 'timestamp'
+        ])
+        && data.actor_uid == request.auth.uid
+        && data.actor_role == userData(request.auth.uid).role
+        && data.actor_role in ['mother', 'clinician']
+        && data.action is string
+        && data.action.size() > 0
+        && data.target_path is string
+        && data.target_path.size() > 0
+        && data.timestamp is timestamp
+        && data.timestamp <= request.time;
+    }
+
+    // User profiles are readable by their owner and assigned clinician only.
+    // Profile creation and role/assignment changes are reserved for trusted provisioning.
+    match /users/{uid} {
+      allow get: if signedIn()
+        && (request.auth.uid == uid || isAssignedClinician(uid));
+      allow list: if signedIn()
+        && resource.data.role == 'mother'
+        && resource.data.assigned_clinician_uid == request.auth.uid
+        && isClinician(request.auth.uid);
+      allow create, delete: if false;
+      allow update: if signedIn()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['display_name', 'email'])
+        && request.resource.data.get('role', '') == resource.data.role
+        && request.resource.data.get('assigned_clinician_uid', '')
+          == resource.data.get('assigned_clinician_uid', '')
+        && request.resource.data.get('created_at', null)
+          == resource.data.get('created_at', null)
+        && request.resource.data.display_name is string
+        && request.resource.data.display_name.size() > 0
+        && request.resource.data.email is string;
+
+      // Mothers may read, create, update, and delete their own HR estimates.
+      // Assigned clinicians may read only; poor/invalid signal values remain valid records.
+      match /hr_readings/{readingId} {
+        allow read: if signedIn()
+          && (request.auth.uid == uid || isAssignedClinician(uid));
+        allow create, update: if signedIn()
+          && request.auth.uid == uid
+          && isMother(uid)
+          && validHeartRate(request.resource.data);
+        allow delete: if signedIn() && request.auth.uid == uid && isMother(uid);
+      }
+
+      // Mothers may manage their own room readings; assigned clinicians are read-only.
+      match /room_readings/{readingId} {
+        allow read: if signedIn()
+          && (request.auth.uid == uid || isAssignedClinician(uid));
+        allow create, update: if signedIn()
+          && request.auth.uid == uid
+          && isMother(uid)
+          && validRoomReading(request.resource.data);
+        allow delete: if signedIn() && request.auth.uid == uid && isMother(uid);
+      }
+
+      // Mothers may manage their own consented check-ins; assigned clinicians read them.
+      match /checkins/{checkinId} {
+        allow read: if signedIn()
+          && (request.auth.uid == uid || isAssignedClinician(uid));
+        allow create, update: if signedIn()
+          && request.auth.uid == uid
+          && isMother(uid)
+          && validCheckin(request.resource.data);
+        allow delete: if signedIn() && request.auth.uid == uid && isMother(uid);
+      }
+
+      // Assigned clinicians may read notes, create their own, and update status only.
+      // Mothers and all other callers are explicitly denied.
+      match /clinician_notes/{noteId} {
+        allow read: if isAssignedClinician(uid);
+        allow create: if isAssignedClinician(uid)
+          && validClinicianNote(request.resource.data);
+        allow update: if isAssignedClinician(uid)
+          && resource.data.author_uid == request.auth.uid
+          && request.resource.data.diff(resource.data).affectedKeys()
+            .hasOnly(['review_status'])
+          && request.resource.data.review_status
+            in ['pending', 'reviewed', 'follow_up'];
+        allow delete: if false;
+      }
+    }
+
+    // Audit entries are append-only, and clinicians can read only their own entries.
+    match /audit_logs/{logId} {
+      allow create: if signedIn() && validAuditLog(request.resource.data);
+      allow get, list: if signedIn()
+        && isClinician(request.auth.uid)
+        && resource.data.actor_uid == request.auth.uid
+        && resource.data.actor_role == 'clinician';
+      allow update, delete: if false;
+    }
+
+    // All unspecified documents and collections are denied by default.
+  }
+}
