@@ -3,6 +3,8 @@ import '../../../core/constants/app_colors.dart';
 import 'registration_screen.dart';
 import '../dashboard/home_dashboard_screen.dart';
 import 'forgot_password_screen.dart';
+import 'package:himummy_mobile/core/errors/app_exception.dart';
+import 'package:himummy_mobile/data/services/auth_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -15,6 +17,49 @@ class _LoginScreenState extends State<LoginScreen> {
   // Controllers to capture user input for email and password
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final AuthService _authService = AuthService();
+  bool _loading = false;
+  String? _error;
+
+  Future<void> _login() async {
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    if (email.isEmpty || password.isEmpty) {
+      setState(() => _error = 'Please enter your email and password.');
+      return;
+    }
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
+    try {
+      await _authService.signInWithEmail(email, password);
+      final profile = await _authService.currentUserProfile();
+      if (!mounted) return;
+      if (profile == null) {
+        setState(() => _error = 'Account profile not found.');
+        return;
+      }
+      if (profile.role == 'mother') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeDashboardScreen()),
+        );
+      } else {
+        await _authService.signOut();
+        if (mounted) {
+          setState(() =>
+              _error = 'Clinician view is not available in the app yet.');
+        }
+      }
+    } on AppException catch (e) {
+      if (mounted) setState(() => _error = e.message);
+    } catch (_) {
+      if (mounted) setState(() => _error = 'Something went wrong. Try again.');
+    } finally {
+      if (mounted) setState(() => _loading = false);
+    }
+  }
 
   @override
   void dispose() {
@@ -186,20 +231,20 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 
                 const SizedBox(height: 30),
+
+                  if (_error != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(_error!,
+                        style: const TextStyle(color: Colors.red)),
+                  ),
                 
                 // Main Login Button matching Figma style
-                SizedBox(
+                                SizedBox(
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Navigate to Home Dashboard on successful login
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => const HomeDashboardScreen()),
-
-                      );
-                    },
+                    onPressed: _loading ? null : _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryPurple,
                       shape: RoundedRectangleBorder(
@@ -207,14 +252,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       elevation: 0,
                     ),
-                    child: const Text(
-                      'Log in',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: _loading
+                        ? const SizedBox(
+                            height: 22,
+                            width: 22,
+                            child: CircularProgressIndicator(
+                                strokeWidth: 2, color: Colors.white),
+                          )
+                        : const Text(
+                            'Log in',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                   ),
                 ),
                 

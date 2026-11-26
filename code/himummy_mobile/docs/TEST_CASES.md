@@ -26,4 +26,4 @@ Items marked "Not done" were not executed and must not be claimed as verified.
 | RULE-06 | Update/delete audit log | Denied | Denied (rules tests) | Pass | `firestore.rules.test.js`, `rules_tests_2026-11-26.png` |
 | RULE-07 | Normal mother and assigned clinician flows | Allowed only for permitted operations | Allowed (rules tests 4 positive); harness flows OK | Pass | `firestore.rules.test.js`, `harness_log_2026-11-26.png` |
 | E2E-01 | Run on a real phone against a real (non-emulator) Firebase project | Works end to end | Not done (emulator and web only) | Not done | - |
-| UI-01 | Test with Member 3's UI | Screens use repositories correctly | Not done (UI not yet integrated) | Not done | - |
+| UI-01 | Log in via Member 3's LoginScreen against emulator (mother OK, wrong password, empty fields, clinician) | Mother reaches dashboard; errors shown for invalid input; clinician blocked with message | All 4 cases behaved as expected (Edge web, emulator). `flutter analyze`: 0 errors, 40 info/warnings in UI code | Pass (login only; other screens still use static data) | ui_login_*_2026-11-26.png |
