@@ -4,6 +4,9 @@ import '../dashboard/home_dashboard_screen.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
 import '../maternal/maternal_health_screen.dart';
 import 'check_in_confirmation_screen.dart';
+import 'package:himummy_mobile/core/errors/app_exception.dart';
+import 'package:himummy_mobile/data/models/checkin.dart';
+import 'package:himummy_mobile/data/repositories/checkin_repository.dart';
 
 class DailyCheckInScreen extends StatefulWidget {
   const DailyCheckInScreen({Key? key}) : super(key: key);
@@ -19,6 +22,54 @@ class _DailyCheckInScreenState extends State<DailyCheckInScreen> {
   String _selectedSleep = '';
   String _selectedEnergy = '';
   final TextEditingController _journalController = TextEditingController();
+  final CheckinRepository _checkinRepository = CheckinRepository();
+  bool _saving = false;
+  String? _error;
+
+  Future<void> _submit() async {
+    if (_selectedMoodIndex < 0) {
+      setState(() => _error = 'Please select how you are feeling.');
+      return;
+    }
+    setState(() {
+      _saving = true;
+      _error = null;
+    });
+    try {
+      await _checkinRepository.submitCheckin(
+        Checkin(
+          answers: {
+            'mood': _moods[_selectedMoodIndex]['label'] as String,
+            'emotions': _selectedEmotions.toList(),
+            'sleep': _selectedSleep,
+            'energy': _selectedEnergy,
+            'note': _journalController.text.trim(),
+          },
+          submittedAt: DateTime.now(),
+          consentGiven: true,
+        ),
+      );
+      if (!mounted) return;
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CheckInConfirmationScreen(),
+        ),
+      );
+    } on AppException catch (e) {
+      if (mounted) setState(() => _error = e.message);
+    } catch (_) {
+      if (mounted) setState(() => _error = 'Could not save. Please try again.');
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _journalController.dispose();
+    super.dispose();
+  }
   
   // Set index to 3 because 'Check-in' is the active tab here
   int _currentIndex = 3;
@@ -240,18 +291,17 @@ class _DailyCheckInScreenState extends State<DailyCheckInScreen> {
               const SizedBox(height: 36),
 
               // Submit Button
+                            if (_error != null)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Text(_error!,
+                      style: const TextStyle(color: Colors.red)),
+                ),
               SizedBox(
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CheckInConfirmationScreen(),
-                      ),
-                    );
-                  },
+                  onPressed: _saving ? null : _submit,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryPurple,
                     shape: RoundedRectangleBorder(
@@ -259,14 +309,21 @@ class _DailyCheckInScreenState extends State<DailyCheckInScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.white,
-                    ),
-                  ),
+                  child: _saving
+                      ? const SizedBox(
+                          height: 22,
+                          width: 22,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2, color: Colors.white),
+                        )
+                      : const Text(
+                          'Submit',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
               
