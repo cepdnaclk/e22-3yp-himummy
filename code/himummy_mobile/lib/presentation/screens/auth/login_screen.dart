@@ -5,6 +5,7 @@ import '../dashboard/home_dashboard_screen.dart';
 import 'forgot_password_screen.dart';
 import 'package:himummy_mobile/core/errors/app_exception.dart';
 import 'package:himummy_mobile/data/services/auth_service.dart';
+import 'package:himummy_mobile/presentation/screens/clinician/patient_list_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -45,13 +46,17 @@ class _LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(builder: (_) => const HomeDashboardScreen()),
         );
+      } 
+      else if (profile.role == 'clinician') {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const PatientListScreen()),
+        );
       } else {
         await _authService.signOut();
-        if (mounted) {
-          setState(() =>
-              _error = 'Clinician view is not available in the app yet.');
-        }
+        if (mounted) setState(() => _error = 'Unknown account role.');
       }
+
     } on AppException catch (e) {
       if (mounted) setState(() => _error = e.message);
     } catch (_) {
