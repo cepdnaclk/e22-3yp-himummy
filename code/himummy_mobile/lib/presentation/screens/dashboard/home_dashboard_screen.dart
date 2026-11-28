@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
@@ -6,7 +6,7 @@ import '../maternal/maternal_health_screen.dart';
 import '../check_in/daily_check_in_screen.dart';
 
 class HomeDashboardScreen extends StatelessWidget {
-  const HomeDashboardScreen({Key? key}) : super(key: key);
+  const HomeDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

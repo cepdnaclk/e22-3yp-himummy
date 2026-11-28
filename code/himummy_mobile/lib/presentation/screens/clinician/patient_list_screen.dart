@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:himummy_mobile/core/constants/app_colors.dart';
 import 'package:himummy_mobile/data/models/user_profile.dart';
 import 'package:himummy_mobile/data/repositories/clinician_repository.dart';

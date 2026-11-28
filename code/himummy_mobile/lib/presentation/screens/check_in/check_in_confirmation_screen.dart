@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../dashboard/home_dashboard_screen.dart';
 
 class CheckInConfirmationScreen extends StatelessWidget {
-  const CheckInConfirmationScreen({Key? key}) : super(key: key);
+  const CheckInConfirmationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

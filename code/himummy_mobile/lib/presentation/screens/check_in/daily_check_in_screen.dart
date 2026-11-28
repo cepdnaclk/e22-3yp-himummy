@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../dashboard/home_dashboard_screen.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
@@ -9,7 +9,7 @@ import 'package:himummy_mobile/data/models/checkin.dart';
 import 'package:himummy_mobile/data/repositories/checkin_repository.dart';
 
 class DailyCheckInScreen extends StatefulWidget {
-  const DailyCheckInScreen({Key? key}) : super(key: key);
+  const DailyCheckInScreen({super.key});
 
   @override
   State<DailyCheckInScreen> createState() => _DailyCheckInScreenState();

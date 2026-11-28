@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 
 class LullabySelectionScreen extends StatelessWidget {
-  const LullabySelectionScreen({Key? key}) : super(key: key);
+  const LullabySelectionScreen({super.key});
 
   final List<String> _lullabies = const [
     'Twinkle Twinkle Little Star',

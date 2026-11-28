@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../core/constants/app_colors.dart';
 
 /// Enum representing different asynchronous UI states
@@ -11,12 +11,12 @@ class AppStateView extends StatelessWidget {
   final String? errorMessage;
 
   const AppStateView({
-    Key? key,
+    super.key,
     required this.state,
     required this.child,
     this.onRetry,
     this.errorMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +162,6 @@ class AppStateView extends StatelessWidget {
 
       // Render the normal child widget when connected successfully
       case ViewState.connected:
-      default:
         return child;
     }
   }

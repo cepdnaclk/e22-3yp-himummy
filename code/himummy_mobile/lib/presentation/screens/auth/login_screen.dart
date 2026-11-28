@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import 'registration_screen.dart';
 import '../dashboard/home_dashboard_screen.dart';
@@ -8,7 +8,7 @@ import 'package:himummy_mobile/data/services/auth_service.dart';
 import 'package:himummy_mobile/presentation/screens/clinician/patient_list_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key}) : super(key: key);
+  const SettingsScreen({super.key});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -112,7 +112,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Switch.adaptive(
                       value: _dailyCheckInReminder,
-                      activeColor: Colors.white,
+                      activeThumbColor: Colors.white,
                       activeTrackColor: AppColors.primaryPurple,
                       onChanged: (value) {
                         setState(() {
@@ -163,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                     Switch.adaptive(
                       value: _deviceAlerts,
-                      activeColor: Colors.white,
+                      activeThumbColor: Colors.white,
                       activeTrackColor: AppColors.primaryPurple,
                       onChanged: (value) {
                         setState(() {

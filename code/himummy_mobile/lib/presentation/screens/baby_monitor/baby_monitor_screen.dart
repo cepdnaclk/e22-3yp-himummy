@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
 import '../../widgets/app_state_view.dart';
@@ -8,7 +8,7 @@ import 'package:himummy_mobile/data/repositories/room_reading_repository.dart';
 import 'package:himummy_mobile/domain/data_freshness.dart';
 
 class BabyMonitorScreen extends StatefulWidget {
-  const BabyMonitorScreen({Key? key}) : super(key: key);
+  const BabyMonitorScreen({super.key});
 
   @override
   State<BabyMonitorScreen> createState() => _BabyMonitorScreenState();

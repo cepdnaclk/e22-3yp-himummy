@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../../core/constants/app_colors.dart';
 import '../dashboard/home_dashboard_screen.dart';
@@ -7,7 +7,7 @@ import 'package:himummy_mobile/data/models/hr_reading.dart';
 import 'package:himummy_mobile/data/repositories/hr_reading_repository.dart';
 
 class MaternalHealthScreen extends StatefulWidget {
-  const MaternalHealthScreen({Key? key}) : super(key: key);
+  const MaternalHealthScreen({super.key});
 
   @override
   State<MaternalHealthScreen> createState() => _MaternalHealthScreenState();
