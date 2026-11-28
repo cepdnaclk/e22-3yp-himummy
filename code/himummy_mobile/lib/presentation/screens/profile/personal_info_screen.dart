@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
+import 'package:himummy_mobile/data/services/auth_service.dart';
 
 class PersonalInfoScreen extends StatefulWidget {
   const PersonalInfoScreen({super.key});
@@ -17,6 +18,16 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
   final TextEditingController _dueDateController = TextEditingController(text: 'October 15, 2026');
 
   @override
+  void initState() {
+    super.initState();
+    AuthService().currentUserProfile().then((p) {
+      if (!mounted || p == null) return;
+      _nameController.text = p.displayName;
+      _emailController.text = p.email;
+    });
+  }
+
+  @override
   void dispose() {
     _nameController.dispose();
     _emailController.dispose();
@@ -24,6 +35,7 @@ class _PersonalInfoScreenState extends State<PersonalInfoScreen> {
     _dueDateController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {

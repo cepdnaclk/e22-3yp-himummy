@@ -6,9 +6,29 @@ import 'settings_screen.dart';
 import 'personal_info_screen.dart';
 import 'help_support_screen.dart';
 import '../auth/login_screen.dart';
+import 'package:himummy_mobile/data/models/user_profile.dart';
+import 'package:himummy_mobile/data/services/auth_service.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthService _authService = AuthService();
+  late final Future<UserProfile?> _profile = _authService.currentUserProfile();
+
+  Future<void> _logOut() async {
+    await _authService.signOut();
+    if (!mounted) return;
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      (route) => false,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,27 +77,37 @@ class ProfileScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          'Maya Bennett',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        Text(
-                          'maya@example.com',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textMuted,
-                          ),
-                        ),
-                        
-                      ],
+                      FutureBuilder<UserProfile?>(
+                      future: _profile,
+                      builder: (context, snapshot) {
+                        final p = snapshot.data;
+                        final name = p?.displayName ??
+                            (snapshot.connectionState == ConnectionState.done
+                                ? 'Unknown'
+                                : '...');
+                        final email = p?.email ?? '';
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.textDark,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              email,
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -169,14 +199,7 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 52,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Navigate to Login screen and clear the navigation stack
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      (route) => false, // Remove all previous routes
-                    );
-                  },
+                  onPressed: _logOut,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.lightPurpleBg,
                     foregroundColor: AppColors.primaryPurple,
