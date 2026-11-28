@@ -1,0 +1,34 @@
+# HiMummy backend test cases
+
+Test date: 2026-11-26. Environment: Windows 11, Flutter 3.50.1, Node v24, Java 21,
+Firebase Emulator Suite (Auth + Firestore, project `demo-himummy`). All data is synthetic.
+Automated results: `flutter test` = 24 passed; `npm test` (rules) = 12 passed; `flutter analyze` = no issues.
+Items marked "Not done" were not executed and must not be claimed as verified.
+
+| ID | Steps | Expected result | Actual result | Pass/Fail | Evidence file |
+|---|---|---|---|---|---|
+| MODEL-01 | Serialize and parse each model | Contract fields round-trip | Passed in `flutter test` | Pass | `test/models/models_test.dart`, `flutter_test_2026-11-26.png` |
+| MODEL-02 | Construct HR estimates below/above allowed range | Typed validation error | Passed in `flutter test`; harness also rejected out-of-range HR (must be 30 and 220 bpm) | Pass | `test/models/models_test.dart`, `harness_log_2026-11-26.png` |
+| MODEL-03 | Save poor/invalid signal quality | Value remains available, no silent drop | Passed in `flutter test`; seeded `invalid` reading visible in emulator | Pass | `test/repositories/repositories_test.dart`, `emulator_firestore_2026-11-26.png` |
+| MODEL-04 | Construct future timestamp, invalid room range, or no-consent check-in | Typed validation error | Passed in `flutter test` | Pass | `test/models/models_test.dart`, `flutter_test_2026-11-26.png` |
+| AUTH-01 | Load signed-in profile from Firestore | Stored role is returned | Passed in `flutter test`; harness sign-in as mother and clinician OK | Pass | `test/services/auth_service_test.dart`, `harness_log_2026-11-26.png` |
+| AUTH-02 | Load missing profile | Typed not-found error; no default role | Passed in `flutter test` | Pass | `test/services/auth_service_test.dart` |
+| ROLE-01 | Check clinician/mother roles and assignment | Only assigned clinician can view patient | Passed in `flutter test`; harness listed only Demo Mother A for Clinician A | Pass | `test/services/role_guard_test.dart`, `harness_log_2026-11-26.png` |
+| FRESH-01 | Compare timestamps around threshold | Old value is stale, recent value is fresh | Passed in `flutter test` | Pass | `test/services/role_guard_test.dart` |
+| REPO-01 | Save/watch HR, room, check-in data | Data is returned by repository API | Passed in `flutter test`; harness saved and loaded HR 76 bpm, room 22.5 C / 45% | Pass | `test/repositories/repositories_test.dart`, `harness_log_2026-11-26.png` |
+| REPO-02 | Query clinician patients, summary, readings, check-ins, notes | Assigned data is returned; other assignment denied | Passed in `flutter test`; harness loaded Mother A summary, Mother B denied | Pass | `test/repositories/repositories_test.dart`, `harness_log_2026-11-26.png` |
+| REPO-03 | Create clinician note and change status | Note and audit entries are both written | Passed in `flutter test`; harness created note and audit log `clinician_note_created` confirmed in emulator | Pass | `test/repositories/repositories_test.dart`, `emulator_clinician_notes_2026-11-26.png`, `audit_logs_2026-11-26.png` |
+| RULE-01 | Unauthenticated read and write | Denied | Denied (rules test 1/12) | Pass | `firebase/rules-tests/firestore.rules.test.js`, `rules_tests_2026-11-26.png` |
+| RULE-02 | Mother A reads mother B data or edits own role | Denied | Denied (rules tests); harness also denied Mother B read | Pass | `firestore.rules.test.js`, `rules_tests_2026-11-26.png`, `harness_log_2026-11-26.png` |
+| RULE-03 | Mother writes clinician note | Denied | Denied (rules tests) | Pass | `firestore.rules.test.js`, `rules_tests_2026-11-26.png` |
+| RULE-04 | Clinician reads unassigned mother or deletes a reading | Denied | Denied (rules tests); harness delete and Mother B read denied | Pass | `firestore.rules.test.js`, `harness_log_2026-11-26.png` |
+| RULE-05 | Clinician spoofs note author | Denied | Denied (rules tests) | Pass | `firestore.rules.test.js`, `rules_tests_2026-11-26.png` |
+| RULE-06 | Update/delete audit log | Denied | Denied (rules tests) | Pass | `firestore.rules.test.js`, `rules_tests_2026-11-26.png` |
+| RULE-07 | Normal mother and assigned clinician flows | Allowed only for permitted operations | Allowed (rules tests 4 positive); harness flows OK | Pass | `firestore.rules.test.js`, `harness_log_2026-11-26.png` |
+| E2E-01 | Run on a real phone against a real (non-emulator) Firebase project | Works end to end | Not done (emulator and web only) | Not done | - |
+| UI-01 | Log in via Member 3's LoginScreen against emulator (mother OK, wrong password, empty fields, clinician) | Mother reaches dashboard; errors shown for invalid input; clinician blocked with message | All 4 cases behaved as expected (Edge web, emulator). `flutter analyze`: 0 errors, 40 info/warnings in UI code | Pass (login only; other screens still use static data) | ui_login_*_2026-11-26.png |
+| UI-02 | Submit Daily Check-in from Member 3's screen (a: no mood selected, b: valid answers) against emulator | (a) validation message, nothing saved; (b) check-in saved with consent_given=true, then confirmation screen | Both behaved as expected; document visible at users/demo-mother-a/checkins | Pass (consent is auto-set true; no consent UI yet) | ui_checkin_*_2026-11-27.png |
+| UI-03 | Open Maternal Health as Mother A against emulator | Latest HR, quality label and chart come from Firestore; invalid signal flagged | Showed 96 bpm, "invalid signal, ignore this value", 30-reading chart | Pass | ui_health_hr_2026-11-27.png |
+| UI-04 | Clinician A logs in, opens Demo Mother A, adds a follow-up note; Clinician B logs in | A sees only Mother A; note saved with audit entry; B sees only Mother B | As expected; audit_logs entry clinician_note_created by demo-clinician-a | Pass | ui_clinician_*_2026-11-27.png |
+| UI-05 | Open Baby Monitor as Mother A | Temperature/humidity from latest Firestore room reading with freshness label | Showed 21.7 °C, 51 %, "Updated recently" | Pass (camera/audio/lullaby still demo UI) | ui_baby_room_2026-11-28.png |
+| UI-06 | Home, Profile and Personal info as Mother A/B; Log out | Real display name/email shown; Log out ends Firebase session | Home showed "Welcome, Demo Mother B!"; profile/personal info pre-filled; logout returned to login | Pass | ui_home_profile_2026-11-28.png |
