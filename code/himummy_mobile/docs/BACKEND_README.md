@@ -34,12 +34,12 @@ Raw audio and video are never written to Firebase.
    `localhost`.
 3. Configure the Firebase CLI project by copying
    `firebase/.firebaserc.example` to `.firebaserc` in the repository root and
-   selecting the local demo project `himummy-demo`. The Firebase emulator does
+   selecting the local demo project `demo-himummy`. The Firebase emulator does
    not require a real project or production credentials.
 4. Start Auth, Firestore, and Emulator UI in a terminal from the repository root:
 
    ```powershell
-   firebase emulators:start --config firebase/firebase.json --project himummy-demo
+   firebase emulators:start --config firebase/firebase.json --project demo-himummy
    ```
 
    Ports are Auth `9099`, Firestore `8080`, and UI `4000`.
@@ -50,7 +50,7 @@ Raw audio and video are never written to Firebase.
    npm --prefix firebase install
    $env:FIRESTORE_EMULATOR_HOST = '127.0.0.1:8080'
    $env:FIREBASE_AUTH_EMULATOR_HOST = '127.0.0.1:9099'
-   $env:GCLOUD_PROJECT = 'himummy-demo'
+   $env:GCLOUD_PROJECT = 'demo-himummy'
    npm --prefix firebase run seed
    ```
 
