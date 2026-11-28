@@ -3,6 +3,9 @@ import '../../../core/constants/app_colors.dart';
 import '../../widgets/app_bottom_nav.dart';
 import '../../widgets/app_state_view.dart';
 import 'lullaby_selection_screen.dart';
+import 'package:himummy_mobile/data/models/room_reading.dart';
+import 'package:himummy_mobile/data/repositories/room_reading_repository.dart';
+import 'package:himummy_mobile/domain/data_freshness.dart';
 
 class BabyMonitorScreen extends StatefulWidget {
   const BabyMonitorScreen({Key? key}) : super(key: key);
@@ -17,6 +20,75 @@ class _BabyMonitorScreenState extends State<BabyMonitorScreen> {
   bool _isListening = false;
   bool _isLullabyPlaying = false;
   String _activeLullabyName = '';
+  late final Stream<RoomReading?> _roomStream =
+      RoomReadingRepository().watchLatestRoomReading();
+
+  Widget _roomCard({
+    required IconData icon,
+    required String label,
+    required String Function(RoomReading r) format,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.cardWhite,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.borderGrey),
+        ),
+        child: StreamBuilder<RoomReading?>(
+          stream: _roomStream,
+          builder: (context, snapshot) {
+            final r = snapshot.data;
+            String value = '—';
+            String note = '';
+            if (snapshot.hasError) {
+              note = 'Could not load';
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              note = 'Loading...';
+            } else if (r == null) {
+              note = 'No readings yet';
+            } else {
+              value = format(r);
+              final stale = isStale(r.updatedAt, const Duration(minutes: 15));
+              note = stale ? 'Old reading' : 'Updated recently';
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, size: 18, color: AppColors.textMuted),
+                    const SizedBox(width: 6),
+                    Text(
+                      label,
+                      style: const TextStyle(
+                          fontSize: 13, color: AppColors.textMuted),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textDark,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  note,
+                  style: const TextStyle(
+                      fontSize: 11, color: AppColors.textMuted),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,74 +230,16 @@ class _BabyMonitorScreenState extends State<BabyMonitorScreen> {
                 // Temperature and Humidity Sensor Cards Side by Side
                 Row(
                   children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardWhite,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.borderGrey),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: const [
-                                Icon(Icons.thermostat, size: 18, color: AppColors.textMuted),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Temperature',
-                                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              _monitorState == ViewState.connected ? '23°C' : '—',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    _roomCard(
+                      icon: Icons.thermostat,
+                      label: 'Temperature',
+                      format: (r) => '${r.roomTempC.toStringAsFixed(1)} °C',
                     ),
                     const SizedBox(width: 16),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppColors.cardWhite,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: AppColors.borderGrey),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: const [
-                                Icon(Icons.water_drop_outlined, size: 18, color: AppColors.textMuted),
-                                SizedBox(width: 6),
-                                Text(
-                                  'Humidity',
-                                  style: TextStyle(fontSize: 13, color: AppColors.textMuted),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Text(
-                              _monitorState == ViewState.connected ? '48%' : '—',
-                              style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.textDark,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                    _roomCard(
+                      icon: Icons.water_drop_outlined,
+                      label: 'Humidity',
+                      format: (r) => '${r.humidityPercent.toStringAsFixed(0)} %',
                     ),
                   ],
                 ),
