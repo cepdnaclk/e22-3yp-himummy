@@ -4,9 +4,24 @@ import '../../widgets/app_bottom_nav.dart';
 import '../baby_monitor/baby_monitor_screen.dart';
 import '../maternal/maternal_health_screen.dart';
 import '../check_in/daily_check_in_screen.dart';
+import 'package:himummy_mobile/data/models/user_profile.dart';
+import 'package:himummy_mobile/data/services/auth_service.dart';
 
-class HomeDashboardScreen extends StatelessWidget {
+class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({super.key});
+
+  @override
+  State<HomeDashboardScreen> createState() => _HomeDashboardScreenState();
+}
+
+class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
+  late final Future<UserProfile?> _profile =
+      AuthService().currentUserProfile();
+
+  String _greetingName(UserProfile? p) {
+    if (p == null || p.displayName.trim().isEmpty) return 'Mum';
+    return p.displayName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,13 +61,21 @@ class HomeDashboardScreen extends StatelessWidget {
               const SizedBox(height: 24),
               
               // Welcome title matching Figma design
-              const Text(
-                'Welcome, Mum!',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
-                ),
+                FutureBuilder<UserProfile?>(
+                future: _profile,
+                builder: (context, snapshot) {
+                  final name = snapshot.hasData || snapshot.hasError
+                      ? _greetingName(snapshot.data)
+                      : '...';
+                  return Text(
+                    'Welcome, $name!',
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textDark,
+                    ),
+                  );
+                },
               ),
               
               const SizedBox(height: 6),
